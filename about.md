@@ -1,0 +1,1 @@
+O **notification-app-cs-plugin** adiciona em uma stack a capacidade de provisionar o uso da Amazon Simple Notification Service (SNS) publicando mensagens em tópicos do serviço.

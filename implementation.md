@@ -1,18 +1,6 @@
-## **Visão Geral**
-O **notification-app-cs-plugin** adiciona em uma stack a capacidade de provisionar o uso da Amazon Simple Notification Service (SNS) publicando mensagens em tópicos do serviço.
+#### **Inputs**
 
-### **Pré-requisitos**
-Para utilizar esse plugin é necessário ter uma stack dotnet criada pelo cli do StackSpot que você pode baixar [**aqui**](https://stackspot.com.br/).
-
-Ter instalado:
-- .NET 5 ou 6 
-- O template base de `rest-app-cs-template` já deverá estar aplicado para você conseguir utilizar este plugin. 
-
-### **Inputs**
-Os inputs necessários para utilizar o plugin são:
-| **Campo** | **Valor** | **Descrição** |
-| :--- | :--- | :--- |
-| Region | Padrão: "us-east-1" | Região da AWS a ser utilizada para configuração do SNS. |
+* Region - Região da AWS em que o serviço SNS foi criado - Campo Obrigatório.
 
 Você pode sobrescrever a configuração padrão adicionando a seção `Sns` em seu `appsettings.json`.
 
@@ -30,8 +18,7 @@ Você pode sobrescrever a configuração padrão adicionando a seção `Sns` em 
   }
 ```
 
-### **Uso**
-Adicione ao seu `IServiceCollection` via `services.AddNotificationSns()` no `Startup` da aplicação ou `Program` tendo como parametro de entrada `IConfiguration` e `IWebHostEnvironment`. 
+#### 3. Adicione ao seu `IServiceCollection` via `services.AddNotificationSns()` no `Startup` da aplicação ou `Program` tendo como parametro de entrada `IConfiguration` e `IWebHostEnvironment`. 
 
 ```csharp
 //using StackSpot.Notification.SNS;
@@ -79,10 +66,9 @@ public class SampleController : ControllerBase
     public async Task<IActionResult> Post([FromBody] string text)
     {        
         var message = new Message(text);
-
-        var result = await _sns.Publish(test);
-
-        return Ok(result.Content);
+        var result = await _sns.Publish(message);
+        
+        return Ok($"MessageId: {result.Content}");
     }
 }
 ```
@@ -114,4 +100,4 @@ services:
 Após a criação do contâiner, crie um tópico para realizar os testes com o componente. Recomendamos que você tenha instalado em sua estação o [AWS CLI](https://aws.amazon.com/pt/cli/). Abaixo um exemplo de comando para criação de uma fila:
 
 ```
-aws  sns create-topic --endpoint-url=http://localhost:4566 --region=us-east-1 --name [NOME DO SEU TÓPCIO]
+aws sns create-topic --endpoint-url=http://localhost:4566 --region=us-east-1 --name [NOME DO SEU TÓPCIO]

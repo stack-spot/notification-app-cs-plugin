@@ -1,0 +1,59 @@
+name: notification-app-cs-plugin
+description: Plug-in para instrumentar o AWS SNS.
+types:
+- app
+inputs:
+- label: Region
+  type: text
+  name: region
+  default: "us-east-1"
+
+hooks:
+#package
+  - type: run
+    trigger: before-render
+    commands:
+      - dotnet add src/{{global_inputs.project_name}}.Application package StackSpot.Notification.SNS
+#dependencyinjection
+  - type: edit
+    trigger: before-render
+    path: "src/{{project_name}}.Application/Common/StackSpot/DependencyInjection.cs"
+    changes:
+      - search:
+          string: "using"
+          insert-before:
+            value: "using StackSpot.Notification.SNS;"
+          when:
+            not-exists: "StackSpot.Notification.SNS;"
+      - search:
+          string: "return services"
+          insert-before:
+            value: "services.AddNotificationSns(configuration);\n"
+          when:
+            not-exists: "services.AddNotificationSns(configuration);"
+#format
+  - type: run
+    trigger: after-render
+    working-dir: src/{{project_name}}.Application
+    commands:
+      -  dotnet dotnet-format --include-generated
+
+displayName: Notification
+
+picture: "plugin.png"
+
+category: Backend, Notification
+
+compatibility:
+  - net5.0
+  - net6.0
+
+about: about.md
+
+usage: usage.md
+
+useCase: useCase.md
+
+implementation: implementation.md
+
+technologies: [".NET", "C#", "AWS SNS"]
