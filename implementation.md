@@ -83,7 +83,7 @@ public class SampleController : ControllerBase
 * Para o funcionamento local você deve preencher a variável de ambiente `LOCALSTACK_CUSTOM_SERVICE_URL` com o valor da url do serviço. O valor padrão do localstack é http://localhost:4566.
 * Abaixo um exemplo de arquivo `docker-compose` com a criação do contâiner: 
 
-```
+```yaml
 version: '2.1'
 
 services:
@@ -99,5 +99,5 @@ services:
 
 Após a criação do contâiner, crie um tópico para realizar os testes com o componente. Recomendamos que você tenha instalado em sua estação o [AWS CLI](https://aws.amazon.com/pt/cli/). Abaixo um exemplo de comando para criação de uma fila:
 
-```
+```bash
 aws sns create-topic --endpoint-url=http://localhost:4566 --region=us-east-1 --name [NOME DO SEU TÓPCIO]
